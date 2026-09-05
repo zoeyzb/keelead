@@ -409,15 +409,16 @@ out center body;`
       // Fallback: try searching just the raw query as a location
       const fallback = await this.geocode(query)
       if (!fallback) return []
-      return this.searchWithGeo({ ...parsed, location: query }, fallback)
+      return this.searchWithGeo({ ...parsed, location: query }, fallback, options)
     }
 
-    return this.searchWithGeo(parsed, geoResult)
+    return this.searchWithGeo(parsed, geoResult, options)
   }
 
   private async searchWithGeo(
     parsed: ParsedQuery,
-    geo: NominatimResult
+    geo: NominatimResult,
+    options?: SearchOptions
   ): Promise<Lead[]> {
     // Step 2: Build bbox string (south,west,north,east)
     const [south, north, west, east] = geo.boundingbox
