@@ -27,6 +27,7 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 
 # Create SQLite database directory
 RUN mkdir -p prisma && chown -R nextjs:nodejs prisma
@@ -37,4 +38,4 @@ ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
 # Push database schema and start
-CMD npx prisma db push --accept-data-loss && node server.js
+CMD ["sh","-c","node ./node_modules/prisma/build/index.js db push --accept-data-loss && node server.js"]
