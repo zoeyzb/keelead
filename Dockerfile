@@ -18,6 +18,7 @@ RUN npm run build
 # Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app
+RUN apk add --no-cache openssl
 ENV NODE_ENV production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -36,4 +37,4 @@ ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
 # Push database schema and start
-CMD npx prisma db push --accept-loss-data && node server.js
+CMD npx prisma db push --accept-data-loss && node server.js
