@@ -10,9 +10,11 @@ RUN npm ci || npm install
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
+RUN apk add --no-cache openssl
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npx prisma generate
+RUN npx prisma db push --accept-data-loss
 RUN npm run build
 
 # Production image, copy all the files and run next
@@ -27,7 +29,6 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 
 # Create SQLite database directory
 RUN mkdir -p prisma && chown -R nextjs:nodejs prisma
@@ -38,4 +39,4 @@ ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
 # Push database schema and start
-CMD ["sh","-c","node ./node_modules/prisma/build/index.js db push --accept-data-loss && node server.js"]
+CMD ["node","server.js"]
