@@ -237,7 +237,7 @@ out center body;`
   way["name"~"${term}",i]["tourism"](${bbox});
   way["name"~"${term}",i]["leisure"](${bbox});
 );
-out center body;`);
+out center body;`;
     }
 
     // No specific search — find all named businesses in area
