@@ -5,6 +5,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
 npm install
+npm install --no-save @modelcontextprotocol/sdk
 npx prisma generate
 npx prisma db push
 
